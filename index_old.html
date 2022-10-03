@@ -14,13 +14,13 @@
     <link rel="stylesheet" href="https://unpkg.com/@holoviz/panel@0.13.1/dist/css/widgets.css" type="text/css" />
     <link rel="stylesheet" href="https://unpkg.com/@holoviz/panel@0.13.1/dist/css/markdown.css" type="text/css" />
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5.22.1"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@5.5.0"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6.21.0"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.js"></script>
-    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-2.4.3.js"></script>
-    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.4.3.min.js"></script>
-    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.4.3.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-2.4.2.js"></script>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.4.2.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.4.2.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/@holoviz/panel@0.13.1/dist/panel.min.js"></script>
     <script type="text/javascript">
       Bokeh.set_log_level("info");
@@ -36,14 +36,15 @@
     <style>
       #sidebar {
 	  width: 350px;
-      }
-      .w3-sidebar {
-    z-index: 3;
-    width: 250px;
-    top: 43px;
-    bottom: 0;
-    height: inherit; }
-
+      },
+      html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
@@ -81,15 +82,15 @@
 
       <div class="row overflow-hidden" id="content">
 	<div class="sidenav" id="sidebar">
-    <h5 class="w3-text-teal">Select The Variable "X" and "Y":</h5>
+    <h1 class="w3-text-teal">Select The Variable "X" and "Y":</h1>
 	  <ul class="nav flex-column">
             <div class="bk-root" id="x-widget"></div>
             <div class="bk-root" id="y-widget"></div>
-            <h5 class="w3-text-teal">Select Number of Clusters:</h5>
+            <h1 class="w3-text-teal">Select Number of Clusters:</h1>
             <div class="bk-root" id="n-widget"></div>
-            <h5 class="w3-text-teal">Background: Elbow Method to Choose the Optimal <br> Number of K-Means Cluster</h5>
-            <div width: 100px;
-            height: 100px; id="line-plot"></div>
+            <h1 class="w3-text-teal">Background: Elbow Method to Choose the Optimal <br> Number of K-Means Cluster</h1>
+            <!-- <span style="padding-left:20px"><div id="mpl" width="200" ></div></span> -->
+            <img src="./ElbowMethod.png" alt="Elbow Method for K-Means Clustering" width="230px">
             <span style="padding-left:20px"><div class="w3-padding-32">
               <button class="w3-btn w3-dark-grey w3-hover-light-grey" onclick="document.getElementById('id01').style.display='block'" style="font-weight:600;">Click here for Description</button>
             </div></span>
@@ -109,7 +110,7 @@
           To find the optimal number of cluster we implemented the Elbow method,<br>
           and it has been found that 4 is the most optimal number of clusters.<br>
           However to ensure interactivity we added some slider so that user can choose the number of clusters.</p>
-          <img src="https://github.com/FIT3164-MDS8/publish_web/blob/4509a670c1a7429e624c3fa2231382973ea6408f/ElbowMethod.png?raw=true" alt="Elbow Method for K-Means Clustering" width="100%">
+          <img src="./ElbowMethod.png" alt="Elbow Method for K-Means Clustering" width="100%">
       </div>
       <footer class="w3-container w3-theme-l1">
 
@@ -150,13 +151,14 @@
       <header class="w3-container w3-theme-l1"> 
         <span onclick="document.getElementById('id02').style.display='none'"
         class="w3-button w3-display-topright">×</span>
-        <p> OUR LEARNING OBJECTIVES </p>
+        <p> ABOUT THE ARTICLES </p>
       </header>
       <div class="w3-padding">
-        <p>1. To perform clustering on text documents.<br>
-          2. To analyze these clusters if they showcase some form of similarities in their findability 
-          characteristics.<br>
-          </p>
+        <p>1. To extract Data from given datasets<br>
+          2. Preprocess it into a desired form<br>
+          3. To perform clustering on text documents<br>
+          4. To analyze these clusters if they showcase some form of similarities in their findability 
+          characteristics</p>
       </div>
     </div>
   </div>
@@ -167,7 +169,7 @@
         <header class="w3-container w3-theme-l1"> 
           <span onclick="document.getElementById('id03').style.display='none'"
           class="w3-button w3-display-topright">×</span>
-          <p> ABOUT THE ARTICLES </p>
+          <p> OUR LEARNING OBJECTIVES </p>
         </header>
         <div class="w3-padding">
           <p>We are using Article from <i>plos.org</i>, specifically the Plos One, which consist of Research Article, Clinical Trial, 
@@ -221,9 +223,8 @@
 	  <div class="bk-root" style="margin-top:10px" id="bar-plot"></div>
     
     <div class="w3-padding w3-display-container w3-white">
-      <p> Note: The number above the "Section" refer to the Number of Cluster</p>
-      <p >This bar graph represents the Average Keywords for each Articles Section depending on the number of K Means Cluster. </p>
-      <p> This bar graph interprets that the higher the value of the Average Keywords, the easier the keywords could be find within the article for each of the Article's sections. </p> <br>
+      <p >This bar graph represents the Average Word for each Articles Section depending on the number of K Means Cluster. </p>
+      <p> This bar graph interprets that the higher the value of the Average Word, the easier the keywords could be find within the article for each of the Article's sections. </p> <br>
     </div>
 
     <header style="font-size:30px;" class="w3-container w3-blue-grey w3-padding-small">
@@ -238,6 +239,8 @@
 
     <py-script>
       import warnings
+
+      warnings.simplefilter(action='ignore', category=FutureWarning)
       import altair as alt
       import panel as pn
       import pandas as pd
@@ -246,7 +249,6 @@
       from sklearn.cluster import KMeans
       from pyodide.http import open_url
 
-      warnings.simplefilter(action='ignore', category=FutureWarning)
       pn.config.sizing_mode = 'stretch_width'
 
       url = 'https://raw.githubusercontent.com/FIT3164-MDS8/Preprocess_Csv/main/clean_cluster.csv'
@@ -256,6 +258,7 @@
       x = pn.widgets.Select(name='x', options=cols, value='Abstract').servable(target='x-widget')
       y = pn.widgets.Select(name='y', options=cols, value='Introduction').servable(target='y-widget')
       n_clusters = pn.widgets.IntSlider(name='n_clusters', start=1, end=6, value=4).servable(target='n-widget')
+
       brush = alt.selection_interval(name='brush')  # selection of type "interval"
 
       def get_clusters(n_clusters):
@@ -281,50 +284,29 @@
                   .mark_point(size=250, shape='cross', color='black')
                   .encode(x=x+':Q', y=y+':Q', tooltip=['cluster'])
           )
-
       def get_bar(df):
           total = df.groupby('cluster').agg('mean')
           return (
             alt.Chart(total)
             .mark_bar()
             .encode(
-              x='Average Keywords:Q',
+              x='Average Word:Q',
               y='Sections:N',
               color='Sections:N',
               row='cluster:O'
             )
             .transform_fold(
-              as_=['Sections', 'Average Keywords'],
+              as_=['Sections', 'Average Word'],
               fold=['Abstract','Introduction','Methods',
               'Experiment','Results', 'Conclusion']
             )
           )
 
-      def get_elbow(df):
-          Sum_of_squared_distances = []
-          K = range(1,10)
-          for num_clusters in K :
-            kmeans = KMeans(n_clusters=num_clusters)
-            kmeans.fit(df.loc[:, df.columns != 'File_csv'])
-            Sum_of_squared_distances.append(kmeans.inertia_)
-          data = pd.DataFrame({'Sum of squared distances': Sum_of_squared_distances,
-                               'K': [1,2,3,4,5,6,7,8,9]})
-          return (
-            alt.Chart(data)
-            .mark_line()
-            .encode(
-              x='K',
-              y='Sum of squared distances'
-            ).properties(
-              title='Elbow Method For Optimal k'
-            )
-          )
-
+    
 
       chart = pn.pane.Vega().servable(target='cluster-plot')
       bar = pn.pane.Vega().servable(target='bar-plot')
       table = pn.widgets.Tabulator(pagination='remote', page_size=10).servable(target='table')
-      line = pn.pane.Vega().servable(target='line-plot')
 
       def update_table(event=None):
           table.value = get_clusters(n_clusters.value)
@@ -344,7 +326,6 @@
               filters.append(dict(field=k, type='<=', value=v[1]))
           table.filters = filters
 
-      line.object = get_elbow(mds)
       update_table()
       update_chart()
     </py-script>
