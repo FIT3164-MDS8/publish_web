@@ -1,393 +1,357 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#000000">
+    <meta name="name" content="PyScript/Panel KMeans Demo">
 
-<head>
-  <meta charset="utf-8">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="theme-color" content="#000000">
-  <meta name="name" content="PyScript/Panel KMeans Demo">
+    <title>Text Document Clustering</title>
+    <link rel="icon" type="image/x-icon" href="./favicon.png">
 
-  <title>Text Document Clustering</title>
-  <link rel="icon" type="image/x-icon" href="./favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://unpkg.com/@holoviz/panel@0.13.1/dist/css/widgets.css" type="text/css" />
+    <link rel="stylesheet" href="https://unpkg.com/@holoviz/panel@0.13.1/dist/css/markdown.css" type="text/css" />
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-    type="text/css" />
-  <link rel="stylesheet" href="https://unpkg.com/@holoviz/panel@0.13.1/dist/css/widgets.css" type="text/css" />
-  <link rel="stylesheet" href="https://unpkg.com/@holoviz/panel@0.13.1/dist/css/markdown.css" type="text/css" />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.js"></script>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-2.4.2.js"></script>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.4.2.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.4.2.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/@holoviz/panel@0.13.1/dist/panel.min.js"></script>
+    <script type="text/javascript">
+      Bokeh.set_log_level("info");
+    </script>
 
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-  <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.js"></script>
-  <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-2.4.2.js"></script>
-  <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.4.2.min.js"></script>
-  <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.4.2.min.js"></script>
-  <script type="text/javascript" src="https://unpkg.com/@holoviz/panel@0.13.1/dist/panel.min.js"></script>
-  <script type="text/javascript">
-    Bokeh.set_log_level("info");
-  </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/@holoviz/panel@0.13.1/dist/bundled/bootstraptemplate/bootstrap.css">
+    <link rel="stylesheet" href="https://unpkg.com/@holoviz/panel@0.13.1/dist/bundled/defaulttheme/default.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/@holoviz/panel@0.13.1/dist/bundled/bootstraptemplate/bootstrap.css">
-  <link rel="stylesheet" href="https://unpkg.com/@holoviz/panel@0.13.1/dist/bundled/defaulttheme/default.css">
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      #sidebar {
+	  width: 350px;
+      },
+      html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 43px;
+  bottom: 0;
+  height: inherit;
+}
+    </style>
 
-  <style>
-    #sidebar {
-      width: 350px;
-    }
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
 
-    ,
-    html,
-    body,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      font-family: "Roboto", sans-serif;
-    }
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+  </head>
 
-    .w3-sidebar {
-      z-index: 3;
-      width: 250px;
-      top: 43px;
-      bottom: 0;
-      height: inherit;
-    }
-  </style>
+  <py-env>
+    - altair
+    - numpy
+    - pandas
+    - scikit-learn
+    - panel==0.13.1
+    - matplotlib
+  </py-env>
 
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+  <body>
 
-  <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-  <script defer src="https://pyscript.net/latest/pyscript.js"></script>
-</head>
-
-<py-env>
-  - altair
-  - numpy
-  - pandas
-  - scikit-learn
-  - panel==0.13.1
-  - matplotlib
-</py-env>
-
-<body>
-
-  <div class="container-fluid d-flex flex-column vh-100 overflow-hidden" id="container">
-    <!-- Side Navigation and Header -->
-    <nav class="navbar navbar-expand-md navbar-dark sticky-top shadow w3-blue-grey" id="header">
-      <button type="button" class="navbar-toggle collapsed" id="sidebarCollapse">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="app-header">
-        <a class="w3-xlarge navbar-brand app-logo" href="/">
-          <img src="https://github.com/FIT3164-MDS8/publish_web/blob/main/Monash_University_logo.png?raw=true"
-            class="app-logo">
-        </a>
-        <a class="title" href="" style="color: #efebe3;">MDS 8 Data Science Project</a>
+    <div class="container-fluid d-flex flex-column vh-100 overflow-hidden" id="container">
+      <!-- Side Navigation and Header -->
+      <nav class="navbar navbar-expand-md navbar-dark sticky-top shadow w3-blue-grey" id="header">
+	<button type="button" class="navbar-toggle collapsed" id="sidebarCollapse">
+	  <span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="app-header">
+	  <a class="w3-xlarge navbar-brand app-logo" href="/">
+	    <img src="https://github.com/FIT3164-MDS8/publish_web/blob/main/Monash_University_logo.png?raw=true" class="app-logo">
+	  </a>
+	  <a class="title" href="" style="color: #efebe3;">MDS 8 Data Science Project</a>
       </div>
-    </nav>
+      </nav>
 
 
-    <div class="row overflow-hidden" id="content">
-      <div class="sidenav" id="sidebar">
-        <h1 class="w3-text-teal">Select The Variable "X" and "Y":</h1>
-        <ul class="nav flex-column">
-          <div class="bk-root" id="x-widget"></div>
-          <div class="bk-root" id="y-widget"></div>
-          <h1 class="w3-text-teal">Select Number of Clusters:</h1>
-          <div class="bk-root" id="n-widget"></div>
-          <h1 class="w3-text-teal">Background: Elbow Method to Choose the Optimal <br> Number of K-Means Cluster</h1>
-          <span style="padding-left:20px">
-            <div id="mpl"></div>
-          </span>
-          <span style="padding-left:20px">
-            <div class="w3-padding-32">
-              <button class="w3-btn w3-dark-grey w3-hover-light-grey"
-                onclick="document.getElementById('id01').style.display='block'" style="font-weight:600;">Click here for
-                Description</button>
-            </div>
-          </span>
-        </ul>
+      <div class="row overflow-hidden" id="content">
+	<div class="sidenav" id="sidebar">
+    <h1 class="w3-text-teal">Select The Variable "X" and "Y":</h1>
+	  <ul class="nav flex-column">
+            <div class="bk-root" id="x-widget"></div>
+            <div class="bk-root" id="y-widget"></div>
+            <h1 class="w3-text-teal">Select Number of Clusters:</h1>
+            <div class="bk-root" id="n-widget"></div>
+            <h1 class="w3-text-teal">Background: Elbow Method to Choose the Optimal <br> Number of K-Means Cluster</h1>
+            <span style="padding-left:20px"><div id="mpl"></div></span>
+            <span style="padding-left:20px"><div class="w3-padding-32">
+              <button class="w3-btn w3-dark-grey w3-hover-light-grey" onclick="document.getElementById('id01').style.display='block'" style="font-weight:600;">Click here for Description</button>
+            </div></span>
+	  </ul>
+	</div>
+
+  <!-- button -->
+  <div id="id01" class="w3-modal">
+    <div class="w3-modal-content w3-card-4 w3-animate-top">
+      <header class="w3-container w3-theme-l1"> 
+        <span onclick="document.getElementById('id01').style.display='none'"
+        class="w3-button w3-display-topright">×</span>
+        <p> How to Find Optimal Number of Clusters? </p>
+      </header>
+      <div class="w3-padding">
+        <p>In this case y is the Sum of squared distance and x is the K. <br>
+          To find the optimal number of cluster we implemented the Elbow method,<br>
+          and it has been found that 4 is the most optimal number of clusters.<br>
+          However to ensure interactivity we added some slider so that user can choose the number of clusters.</p>
       </div>
+      <footer class="w3-container w3-theme-l1">
 
-      <!-- button -->
-      <div id="id01" class="w3-modal">
-        <div class="w3-modal-content w3-card-4 w3-animate-top">
-          <header class="w3-container w3-theme-l1">
-            <span onclick="document.getElementById('id01').style.display='none'"
-              class="w3-button w3-display-topright">×</span>
-            <p> How to Find Optimal Number of Clusters? </p>
-          </header>
-          <div class="w3-padding">
-            <p>In this case y is the Sum of squared distance and x is the K. <br>
-              To find the optimal number of cluster we implemented the Elbow method,<br>
-              and it has been found that 4 is the most optimal number of clusters.<br>
-              However to ensure interactivity we added some slider so that user can choose the number of clusters.</p>
-          </div>
-          <footer class="w3-container w3-theme-l1">
+      </footer>
+    </div>
+  </div>
 
-          </footer>
-        </div>
-      </div>
+  
 
+	<div class="col mh-100 float-left w3-display-container" id="main">
 
+    <!-- Header -->
+  <div class="w3-container" style="margin-top:15px" id="showcase">
+    <h2 class="w3-xxxlarge"><b>Text Document Clustering and Analysis of their Similarities</b></h2>
+    <h1 class="w3-xxlarge w3-text-teal"><b>Based on Findability.</b></h1>
+  </div>
 
-      <div class="col mh-100 float-left w3-display-container" id="main">
+      <header style="font-size:30px; margin-top:25px;" class="w3-container w3-blue-grey w3-padding-small">
+        <h2>Introduction</h2>
+      </header>
+	  <p style="margin-top:10px"> Users tend to prefer articles which are easier to find the information they are looking 
+      for. However, not all articles display their information in an easy to locate places. Some articles place their information in 
+      strategic places such as abstract, keywords, or introduction. <br>
+      This project intends to cluster text documents 
+      and analyze their similarities/characteristics based on the placement of texts (eg: title words) within the 
+      articles. This in case the "X" symbol is the cluster's centroid, which represents the mean of the clusters.</p>
+  
 
-        <!-- Header -->
-        <div class="w3-container" style="margin-top:15px" id="showcase">
-          <h2 class="w3-xxxlarge"><b>Text Document Clustering and Analysis of their Similarities</b></h2>
-          <h1 class="w3-xxlarge w3-text-teal"><b>Based on Findability.</b></h1>
-        </div>
+    <div class="w3-padding-32 w3-center">
+      <button class="w3-btn w3-dark-grey w3-hover-light-grey" onclick="document.getElementById('id02').style.display='block'" style="font-weight:600;">Our Learning Objectives</button>
+      <button class="w3-btn w3-dark-grey w3-hover-light-grey" onclick="document.getElementById('id03').style.display='block'" style="font-weight:600;">About the Articles</button>
+      <button class="w3-btn w3-dark-grey w3-hover-light-grey" onclick="document.getElementById('id04').style.display='block'" style="font-weight:600;">Software Components</button>
+    </div></span>
 
-        <header style="font-size:30px; margin-top:25px;" class="w3-container w3-blue-grey w3-padding-small">
-          <h2>Introduction</h2>
-        </header>
-        <p style="margin-top:10px"> Users tend to prefer articles which are easier to find the information they are
-          looking
-          for. However, not all articles display their information in an easy to locate places. Some articles place
-          their information in
-          strategic places such as abstract, keywords, or introduction. <br>
-          This project intends to cluster text documents
-          and analyze their similarities/characteristics based on the placement of texts (eg: title words) within the
-          articles. This in case the "X" symbol is the cluster's centroid, which represents the mean of the clusters.
-        </p>
-
-
-        <div class="w3-padding-32 w3-center">
-          <button class="w3-btn w3-dark-grey w3-hover-light-grey"
-            onclick="document.getElementById('id02').style.display='block'" style="font-weight:600;">Our Learning
-            Objectives</button>
-          <button class="w3-btn w3-dark-grey w3-hover-light-grey"
-            onclick="document.getElementById('id03').style.display='block'" style="font-weight:600;">About the
-            Articles</button>
-          <button class="w3-btn w3-dark-grey w3-hover-light-grey"
-            onclick="document.getElementById('id04').style.display='block'" style="font-weight:600;">Software
-            Components</button>
-        </div></span>
-
-        <!-- button Learning Objectives -->
-        <div id="id02" class="w3-modal">
-          <div class="w3-modal-content w3-card-4 w3-animate-top">
-            <header class="w3-container w3-theme-l1">
-              <span onclick="document.getElementById('id02').style.display='none'"
-                class="w3-button w3-display-topright">×</span>
-              <p> ABOUT THE ARTICLES </p>
-            </header>
-            <div class="w3-padding">
-              <p>1. To extract Data from given datasets<br>
-                2. Preprocess it into a desired form<br>
-                3. To perform clustering on text documents<br>
-                4. To analyze these clusters if they showcase some form of similarities in their findability
-                characteristics</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- button About the Articles -->
-        <div id="id03" class="w3-modal">
-          <div class="w3-modal-content w3-card-4 w3-animate-top">
-            <header class="w3-container w3-theme-l1">
-              <span onclick="document.getElementById('id03').style.display='none'"
-                class="w3-button w3-display-topright">×</span>
-              <p> OUR LEARNING OBJECTIVES </p>
-            </header>
-            <div class="w3-padding">
-              <p>We are using Article from <i>plos.org</i>, specifically the Plos One, which consist of Research
-                Article, Clinical Trial,
-                Registered Report Protocol, Registered Report, Lab Protocol, and Study protocol. <br>
-                We choose <i>Plos One</i> for our cluster model since it has a complete format of article, compared to
-                the other Journal. <br>
-                Plos One is a journal community that has a purpose to benefit the society for now and the future by
-                working collaboratively to advance science. It aims to speeds up the advancement
-                of science to be published and discoverable, and freely accessible to all readers. <br>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- button Software Components -->
-        <div id="id04" class="w3-modal">
-          <div class="w3-modal-content w3-card-4 w3-animate-top">
-            <header class="w3-container w3-theme-l1">
-              <span onclick="document.getElementById('id04').style.display='none'"
-                class="w3-button w3-display-topright">×</span>
-              <p> OUR SOFTWARE COMPONENTS </p>
-            </header>
-            <div class="w3-padding">
-              <p>The components we are using to build this project are:<br>
-                <b>Python Programming Language:</b> This is used during the data pre-process and extraction, and
-                clustering process<br>
-                <b>HTML:</b> This is to build the UI Visualization by structuring web page and our project content,
-                supported by CSS and
-                Javascript to create interactivity. <br>
-              </p>
-            </div>
-          </div>
-        </div>
-
-
-        <header style="font-size:30px;" class="w3-container w3-blue-grey w3-padding-small">
-          <h2>Clustering on Text Documents</h2>
-        </header>
-        <div class="bk-root" style="margin-top:10px" id="cluster-plot"></div>
-
-        <div class="w3-padding w3-display-container w3-white">
-          <p>As the value appears on the bottom left-hand-side, it means that particular keywords are difficult to find
-            within the Article’s
-            section, which are Abstract, Introduction, Method, Experiments, Results, and Conclusion. </p>
-          <p> On the other side, as the value appears on the upper right-hand-side, it means particular keywords are
-            easy to find within
-            a particular article’s section. </p>
-          <p>
-            Hence, when its findability is difficult, the article tends to be not relevant to the keyword that user
-            usually search for query. On the hand, when findability of the keywords within the
-            articles is relatively easy, this means the articles is relevant for the users.
-          </p><br>
-        </div>
-
-        <header style="font-size:30px;" class="w3-container w3-blue-grey w3-padding-small">
-          <h2>Analysis of Clustering by using Bar Chart</h2>
-        </header>
-        <div class="bk-root" style="margin-top:10px" id="bar-plot"></div>
-
-        <div class="w3-padding w3-display-container w3-white">
-          <p>This bar graph represents the Average Word for each Articles Section depending on the number of K Means
-            Cluster. </p>
-          <p> This bar graph interprets that the higher the value of the Average Word, the easier the keywords could be
-            find within the article for each of the Article's sections. </p> <br>
-        </div>
-
-        <header style="font-size:30px;" class="w3-container w3-blue-grey w3-padding-small">
-          <h2>The List of Articles</h2>
-        </header>
-        <div class="bk-root" style="margin-top:10px" id="table"></div>
+    <!-- button Learning Objectives -->
+  <div id="id02" class="w3-modal">
+    <div class="w3-modal-content w3-card-4 w3-animate-top">
+      <header class="w3-container w3-theme-l1"> 
+        <span onclick="document.getElementById('id02').style.display='none'"
+        class="w3-button w3-display-topright">×</span>
+        <p> ABOUT THE ARTICLES </p>
+      </header>
+      <div class="w3-padding">
+        <p>1. To extract Data from given datasets<br>
+          2. Preprocess it into a desired form<br>
+          3. To perform clustering on text documents<br>
+          4. To analyze these clusters if they showcase some form of similarities in their findability 
+          characteristics</p>
       </div>
     </div>
   </div>
 
+    <!-- button About the Articles -->
+    <div id="id03" class="w3-modal">
+      <div class="w3-modal-content w3-card-4 w3-animate-top">
+        <header class="w3-container w3-theme-l1"> 
+          <span onclick="document.getElementById('id03').style.display='none'"
+          class="w3-button w3-display-topright">×</span>
+          <p> OUR LEARNING OBJECTIVES </p>
+        </header>
+        <div class="w3-padding">
+          <p>We are using Article from <i>plos.org</i>, specifically the Plos One, which consist of Research Article, Clinical Trial, 
+            Registered Report Protocol, Registered Report, Lab Protocol, and Study protocol. <br>
+            We choose <i>Plos One</i> for our cluster model since it has a complete format of article, compared to the other Journal. <br>
+            Plos One is a journal community that has a purpose to benefit the society for now and the future by working collaboratively to advance science. It aims to speeds up the advancement 
+            of science to be published and discoverable, and freely accessible to all readers. <br>
+          </p>
+        </div>
+      </div>
+    </div>
 
+      <!-- button Software Components -->
+  <div id="id04" class="w3-modal">
+    <div class="w3-modal-content w3-card-4 w3-animate-top">
+      <header class="w3-container w3-theme-l1"> 
+        <span onclick="document.getElementById('id04').style.display='none'"
+        class="w3-button w3-display-topright">×</span>
+        <p> OUR SOFTWARE COMPONENTS </p>
+      </header>
+      <div class="w3-padding">
+        <p>The components we are using to build this project are:<br>
+          <b>Python Programming Language:</b> This is used during the data pre-process and extraction, and  clustering process<br>
+          <b>HTML:</b> This is to build the UI Visualization by structuring web page and our project content, supported by CSS and 
+          Javascript to create interactivity. <br>
+        </p>
+      </div>
+    </div>
+  </div>
+    
 
-  <py-script>
-    import warnings
+    <header style="font-size:30px;" class="w3-container w3-blue-grey w3-padding-small">
+      <h2>Clustering on Text Documents</h2>
+    </header>
+	  <div class="bk-root" style="margin-top:10px" id="cluster-plot" ></div>
 
-    warnings.simplefilter(action='ignore', category=FutureWarning)
-    import altair as alt
-    import panel as pn
-    import pandas as pd
-    import sklearn.cluster as KMeans
+    <div class="w3-padding w3-display-container w3-white">
+      <p >As the value appears on the bottom left-hand-side, it means that particular keywords are difficult to find within the Article’s 
+        section, which are Abstract, Introduction, Method, Experiments, Results, and Conclusion. </p>
+      <p> On the other side, as the value appears on the upper right-hand-side, it means particular keywords are easy to find within 
+        a particular article’s section. </p> 
+        <p>
+          Hence, when its findability is difficult, the article tends to be not relevant to the keyword that user usually search for query. On the hand, when findability of the keywords within the 
+          articles is relatively easy, this means the articles is relevant for the users. 
+        </p><br>
+    </div>
 
-    from sklearn.cluster import KMeans
-    from pyodide.http import open_url
+    <header style="font-size:30px;" class="w3-container w3-blue-grey w3-padding-small">
+      <h2>Analysis of Clustering by using Bar Chart</h2>
+    </header>
+	  <div class="bk-root" style="margin-top:10px" id="bar-plot"></div>
+    
+    <div class="w3-padding w3-display-container w3-white">
+      <p >This bar graph represents the Average Word for each Articles Section depending on the number of K Means Cluster. </p>
+      <p> This bar graph interprets that the higher the value of the Average Word, the easier the keywords could be find within the article for each of the Article's sections. </p> <br>
+    </div>
 
-    pn.config.sizing_mode = 'stretch_width'
+    <header style="font-size:30px;" class="w3-container w3-blue-grey w3-padding-small">
+      <h2>The List of Articles</h2>
+    </header>
+	  <div class="bk-root" style="margin-top:10px" id="table"></div>
+	</div>
+      </div>
+    </div>
 
-    url = 'https://raw.githubusercontent.com/FIT3164-MDS8/Preprocess_Csv/main/clean_cluster.csv'
-    mds = pd.read_csv(open_url(url))
-    cols = list(mds.columns)[1:7]
+    
 
-    x = pn.widgets.Select(name='x', options=cols, value='Abstract').servable(target='x-widget')
-    y = pn.widgets.Select(name='y', options=cols, value='Introduction').servable(target='y-widget')
-    n_clusters = pn.widgets.IntSlider(name='n_clusters', start=1, end=6, value=4).servable(target='n-widget')
+    <py-script>
+      import warnings
 
-    brush = alt.selection_interval(name='brush') # selection of type "interval"
+      warnings.simplefilter(action='ignore', category=FutureWarning)
+      import altair as alt
+      import panel as pn
+      import pandas as pd
+      import sklearn.cluster as KMeans
 
-    def get_clusters(n_clusters):
-    model = KMeans(n_clusters=n_clusters)
-    clu = model.fit(mds[cols].values)
-    df = mds.copy()
-    df['cluster'] = clu.labels_.astype('str')
-    return df
+      from sklearn.cluster import KMeans
+      from pyodide.http import open_url
 
-    def get_chart(x, y, df):
-    centers = df.groupby('cluster').mean()
-    centers = centers.reset_index()
-    return (
-    alt.Chart(df)
-    .mark_point(size=100)
-    .encode(
-    x=alt.X(x, scale=alt.Scale(zero=False)),
-    y=alt.Y(y, scale=alt.Scale(zero=False)),
-    color='cluster',
-    tooltip=['cluster', 'File_csv']
-    ).add_selection(brush).properties(width=800) +
-    alt.Chart(centers)
-    .mark_point(size=250, shape='cross', color='black')
-    .encode(x=x+':Q', y=y+':Q', tooltip=['cluster'])
-    )
-    def get_bar(df):
-    total = df.groupby('cluster').agg('mean')
-    return (
-    alt.Chart(total)
-    .mark_bar()
-    .encode(
-    x='Average Word:Q',
-    y='Sections:N',
-    color='Sections:N',
-    row='cluster:O'
-    )
-    .transform_fold(
-    as_=['Sections', 'Average Word'],
-    fold=['Abstract','Introduction','Methods',
-    'Experiment','Results', 'Conclusion']
-    )
-    )
+      pn.config.sizing_mode = 'stretch_width'
 
+      url = 'https://raw.githubusercontent.com/FIT3164-MDS8/Preprocess_Csv/main/clean_cluster.csv'
+      mds = pd.read_csv(open_url(url))
+      cols = list(mds.columns)[1:7]
 
+      x = pn.widgets.Select(name='x', options=cols, value='Abstract').servable(target='x-widget')
+      y = pn.widgets.Select(name='y', options=cols, value='Introduction').servable(target='y-widget')
+      n_clusters = pn.widgets.IntSlider(name='n_clusters', start=1, end=6, value=4).servable(target='n-widget')
 
-    chart = pn.pane.Vega().servable(target='cluster-plot')
-    bar = pn.pane.Vega().servable(target='bar-plot')
-    table = pn.widgets.Tabulator(pagination='remote', page_size=10).servable(target='table')
+      brush = alt.selection_interval(name='brush')  # selection of type "interval"
 
-    def update_table(event=None):
-    table.value = get_clusters(n_clusters.value)
+      def get_clusters(n_clusters):
+          model = KMeans(n_clusters=n_clusters)
+          clu = model.fit(mds[cols].values)
+          df = mds.copy()
+          df['cluster'] = clu.labels_.astype('str')
+          return df
 
-    n_clusters.param.watch(update_table, 'value')
+      def get_chart(x, y, df):
+          centers = df.groupby('cluster').mean()
+          centers = centers.reset_index()
+          return (
+              alt.Chart(df)
+                  .mark_point(size=100)
+                  .encode(
+                      x=alt.X(x, scale=alt.Scale(zero=False)),
+                      y=alt.Y(y, scale=alt.Scale(zero=False)),
+                      color='cluster',
+                      tooltip=['cluster', 'File_csv']
+                  ).add_selection(brush).properties(width=800) +
+              alt.Chart(centers)
+                  .mark_point(size=250, shape='cross', color='black')
+                  .encode(x=x+':Q', y=y+':Q', tooltip=['cluster'])
+          )
+      def get_bar(df):
+          total = df.groupby('cluster').agg('mean')
+          return (
+            alt.Chart(total)
+            .mark_bar()
+            .encode(
+              x='Average Word:Q',
+              y='Sections:N',
+              color='Sections:N',
+              row='cluster:O'
+            )
+            .transform_fold(
+              as_=['Sections', 'Average Word'],
+              fold=['Abstract','Introduction','Methods',
+              'Experiment','Results', 'Conclusion']
+            )
+          )
 
-    @pn.depends(x, y, n_clusters, watch=True)
-    def update_chart(*events):
-    chart.object = get_chart(x.value, y.value, table.value)
-    chart.selection.param.watch(update_filters, 'brush')
-    bar.object = get_bar(table.value)
+    
 
-    def update_filters(event=None):
-    filters = []
-    for k, v in (getattr(event, 'new') or {}).items():
-    filters.append(dict(field=k, type='>=', value=v[0]))
-    filters.append(dict(field=k, type='<=', value=v[1])) table.filters=filters update_table() update_chart()
-      </py-script>
+      chart = pn.pane.Vega().servable(target='cluster-plot')
+      bar = pn.pane.Vega().servable(target='bar-plot')
+      table = pn.widgets.Tabulator(pagination='remote', page_size=10).servable(target='table')
 
-      <py-script output="mpl">
-        import matplotlib.pyplot as plt
+      def update_table(event=None):
+          table.value = get_clusters(n_clusters.value)
 
-        Sum_of_squared_distances = []
-        K = range(1,10)
-        for num_clusters in K :
+      n_clusters.param.watch(update_table, 'value')
+
+      @pn.depends(x, y, n_clusters, watch=True)
+      def update_chart(*events):
+          chart.object = get_chart(x.value, y.value, table.value)
+          chart.selection.param.watch(update_filters, 'brush')
+          bar.object = get_bar(table.value)
+
+      def update_filters(event=None):
+          filters = []
+          for k, v in (getattr(event, 'new') or {}).items():
+              filters.append(dict(field=k, type='>=', value=v[0]))
+              filters.append(dict(field=k, type='<=', value=v[1]))
+          table.filters = filters
+
+      update_table()
+      update_chart()
+    </py-script>
+    
+    <py-script output="mpl">
+      import matplotlib.pyplot as plt
+
+      Sum_of_squared_distances = []
+      K = range(1,10)
+      for num_clusters in K :
         kmeans = KMeans(n_clusters=num_clusters)
         kmeans.fit(mds.loc[:, mds.columns != 'File_csv'])
         Sum_of_squared_distances.append(kmeans.inertia_)
-        plt.plot(K,Sum_of_squared_distances,'bx-')
-        plt.title('Elbow Method For Optimal k')
-        plt
-      </py-script>
+      plt.plot(K,Sum_of_squared_distances,'bx-')
+      plt.title('Elbow Method For Optimal k')
+      plt
+    </py-script>
 
-      <script>
-        $(document).ready(function () {
-          $('#sidebarCollapse').on('click', function () {
-            $('#sidebar').toggleClass('active')
-            $(this).toggleClass('active')
-            var interval = setInterval(function () { window.dispatchEvent(new Event('resize')); }, 10);
-            setTimeout(function () { clearInterval(interval) }, 210)
-          });
+    <script>
+      $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active')
+        $(this).toggleClass('active')
+        var interval = setInterval(function () { window.dispatchEvent(new Event('resize')); }, 10);
+          setTimeout(function () { clearInterval(interval) }, 210)
         });
-      </script>
-</body>
-
+      });
+    </script>
+  </body>
+  
 </html>
