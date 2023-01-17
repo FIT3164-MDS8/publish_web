@@ -54,14 +54,16 @@
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
   </head>
 
-  <py-env>
-    - altair
-    - numpy
-    - pandas
-    - scikit-learn
-    - panel==0.13.1
-    - matplotlib
-  </py-env>
+  <py-config>
+    packages = [
+      "altair",
+      "pandas",
+      "numpy",
+      "scikit-learn",
+      "panel==0.13.1",
+      "matplotlib"
+    ]
+  </py-config>
 
   <body>
 
